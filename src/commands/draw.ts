@@ -17,12 +17,23 @@ export const DrawLotsSlashCommand : SlashCommand = {
   async execute(interaction: CommandInteraction) {
     // user id format is : <@...>
     // regular expression?
-    const users:string[] = interaction.options.getString('users').split(' ');
-    
-    // get user input
-    const winner_num = interaction.options.getInteger('winner_num');
 
-    if (winner_num > users.length){
+    if (!interaction.isChatInputCommand()) return;
+    const input_users = interaction?.options.getString('users');
+    const users = input_users?.split(' ')
+    if (typeof users === 'undefined'){
+      await interaction.reply('there are users in input string');
+      return;
+    }
+    // get user input
+    
+    const winner_num = interaction.options.getInteger('winner_num');
+    if(!winner_num){
+      await interaction.reply('there is no winner_num');
+      return;
+    }
+
+    if (winner_num > users.length ?? 0){
       await interaction.reply('OOPS! the lot number exceed the number of participants')
     }
     // shuffle the candidates 

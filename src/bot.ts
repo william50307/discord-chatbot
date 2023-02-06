@@ -37,4 +37,40 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
         })
       }
     })
-  }
+
+    client.on(Events.InteractionCreate, interaction => {
+      if (!interaction.isButton()) return;
+      //console.log(interaction);
+
+      const collector = interaction.channel.createMessageComponentCollector({time: 15000 });
+
+      collector.on('collect', async buttonInteraction => {
+        console.log('hihgi')
+        if (buttonInteraction.customId === 'yes'){
+          await buttonInteraction.update({ content: 'Yes button was clicked!', components: [] });
+          // send DM to who react
+          await buttonInteraction.user.send({content : 'Yes butoon was clicked!'})
+        }
+        else if(buttonInteraction.customId === 'no'){
+          await buttonInteraction.update({ 'content': 'No button was clicked!', components: [] });
+          // send DM to who react        
+          await buttonInteraction.user.send({'content' : 'No butoon was clicked!'})
+        }
+      });
+
+      collector.on('end', collected => console.log(`Collected ${collected.size} items`));
+    });
+
+    const wait = require('node:timers/promises').setTimeout;
+
+    client.on(Events.InteractionCreate, async interaction => {
+      if (!interaction.isStringSelectMenu()) return;
+
+      if (interaction.customId === 'select') {
+        //await interaction.deferUpdate();
+        //await wait(3000);
+        const selected = interaction.values[0];
+        await interaction.reply({ content: `${selected} was selected!`});
+      }
+    })
+}

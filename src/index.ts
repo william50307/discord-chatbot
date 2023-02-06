@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits } from 'discord.js'
 import { EmergencyTagSlashCommand } from './commands/emergencytag'
-import { SetStateSlashCommand } from './commands/setstate'
+import { SetStateSlashCommand, LastMessageCommand } from './commands/setstate'
 import { DrawLotsSlashCommand } from './commands/draw'
 import { ButtonSlashCommand } from './commands/buttons'
 import {DropDownSlashCommand} from './commands/dropdown'
@@ -15,7 +15,7 @@ import { AppConfig, readEnvironmentVariable } from './config'
 import { loginBot, setBotListener } from './bot'
 
 // register commands
-const commandList = [EmergencyTagSlashCommand, SetStateSlashCommand, DrawLotsSlashCommand, ButtonSlashCommand,DropDownSlashCommand]
+const commandList = [EmergencyTagSlashCommand, LastMessageCommand, SetStateSlashCommand, DrawLotsSlashCommand, ButtonSlashCommand,DropDownSlashCommand]
 
 dotenv.config()
 

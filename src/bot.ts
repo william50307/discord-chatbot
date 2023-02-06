@@ -41,7 +41,7 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
     client.on(Events.InteractionCreate, interaction => {
       if (!interaction.isButton()) return;
       //console.log(interaction);
-
+      if(!interaction.channel) return;
       const collector = interaction.channel.createMessageComponentCollector({time: 15000 });
 
       collector.on('collect', async buttonInteraction => {

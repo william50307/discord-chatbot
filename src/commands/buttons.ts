@@ -20,6 +20,7 @@ export const ButtonSlashCommand : SlashCommand = {
         .setRequired(true)),
 
   async execute(interaction: CommandInteraction) {
+    if (!interaction.isChatInputCommand()) return;
     const state = interaction.options.getString('state');
     // -- call api 
     const row:ActionRowBuilder = new ActionRowBuilder()

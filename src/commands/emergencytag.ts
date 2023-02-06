@@ -16,8 +16,15 @@ export const EmergencyTagSlashCommand: SlashCommand = {
         .setRequired(true)),
   async execute(interaction: CommandInteraction) {
 
-    //這裡input tag人要空一個空白鍵，抓有空的話可以改成正規表達式寫打
-    const users:string[] = interaction.options.getString('users').split(' ');
+    if (!interaction.isChatInputCommand()) return;
+    
+    //這裡input tag人要空一個空白鍵，有空的話可以改成正規表達式
+    const input_users = interaction?.options.getString('users');
+    const users = input_users?.split(' ')
+    if (typeof users === 'undefined'){
+      await interaction.reply('there are users in input string');
+      return;
+    }
     let msg:string = 'message from user : ' + interaction.user.username
     msg = msg + '\ncontent:\n' + interaction.options.getString('message');
 

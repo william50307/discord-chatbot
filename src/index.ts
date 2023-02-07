@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits } from 'discord.js'
-import { EmergencyTagSlashCommand } from './commands/emergencytag'
-import { SetStateSlashCommand, LastMessageCommand } from './commands/setstate'
+import { AssignJobSlashCommand } from './commands/assignjob'
+import { AllUserStateSlashCommand, SetStateSlashCommand, LastMessageCommand} from './commands/state'
 import { DrawLotsSlashCommand } from './commands/draw'
 import { ButtonSlashCommand } from './commands/buttons'
 import {DropDownSlashCommand} from './commands/dropdown'
@@ -13,9 +13,12 @@ import { sequenceS } from 'fp-ts/Apply'
 import { AppError } from './errors'
 import { AppConfig, readEnvironmentVariable } from './config'
 import { loginBot, setBotListener } from './bot'
+import { MessageTrackerSlashCommand } from './commands/messagetraker'
+import { AllUserIdSlashCommand } from './commands/utils'
+
 
 // register commands
-const commandList = [EmergencyTagSlashCommand, LastMessageCommand, SetStateSlashCommand, DrawLotsSlashCommand, ButtonSlashCommand,DropDownSlashCommand]
+const commandList = [AllUserIdSlashCommand, AllUserStateSlashCommand, AssignJobSlashCommand, LastMessageCommand, SetStateSlashCommand, DrawLotsSlashCommand, ButtonSlashCommand,DropDownSlashCommand, MessageTrackerSlashCommand]
 
 dotenv.config()
 

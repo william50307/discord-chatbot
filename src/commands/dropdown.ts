@@ -9,7 +9,7 @@ export const DropDownSlashCommand : SlashCommand = {
     .setDescription('drop down list testing'),
 
   async execute(interaction: CommandInteraction) {
-    const row = new ActionRowBuilder()
+    const row = new ActionRowBuilder<any>()
 			.addComponents(
 				new StringSelectMenuBuilder()
 					.setCustomId('select')

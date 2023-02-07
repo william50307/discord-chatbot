@@ -23,7 +23,7 @@ export const ButtonSlashCommand : SlashCommand = {
     if (!interaction.isChatInputCommand()) return;
     const state = interaction.options.getString('state');
     // -- call api 
-    const row:ActionRowBuilder = new ActionRowBuilder()
+    const row:ActionRowBuilder<any> = new ActionRowBuilder<any>()
 			.addComponents(
 				new ButtonBuilder()
 					.setCustomId('yes')

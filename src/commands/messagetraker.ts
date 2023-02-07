@@ -42,13 +42,11 @@ export const MessageTrackerSlashCommand: SlashCommand = {
 
     // send DM to all tagged users
     for(const user of users){
-      interaction.client.users.send(user.slice(2,-1), 'you got a new job');
+      interaction.client.users.send(user.slice(2,-1), 'you got a new meesage, please reply ASAP');
     }
 
     // use listner to send notification
 
-
-    
 
     //--- call api ---
     await interaction.reply({ content: input_users + ' ' + message, ephemeral: true })

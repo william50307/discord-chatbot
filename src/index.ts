@@ -1,11 +1,6 @@
 import { Client, GatewayIntentBits } from 'discord.js'
-<<<<<<< HEAD
 import { AssignJobSlashCommand } from './commands/assignjob'
 import { AllUserStateSlashCommand, SetStateSlashCommand, LastMessageCommand} from './commands/state'
-=======
-import { EmergencyTagSlashCommand } from './commands/emergencytag'
-import { SetStateSlashCommand } from './commands/setstate'
->>>>>>> 863883fe78aced1d6e920891b0121ecdcbadfe98
 import { DrawLotsSlashCommand } from './commands/draw'
 import { ButtonSlashCommand } from './commands/buttons'
 import {DropDownSlashCommand} from './commands/dropdown'
@@ -18,20 +13,11 @@ import { sequenceS } from 'fp-ts/Apply'
 import { AppError } from './errors'
 import { AppConfig, readEnvironmentVariable } from './config'
 import { loginBot, setBotListener } from './bot'
-<<<<<<< HEAD
 import { MessageTrackerSlashCommand } from './commands/messagetraker'
 import { AllUserIdSlashCommand } from './commands/utils'
 
-
 // register commands
 const commandList = [AllUserIdSlashCommand, AllUserStateSlashCommand, AssignJobSlashCommand, LastMessageCommand, SetStateSlashCommand, DrawLotsSlashCommand, ButtonSlashCommand,DropDownSlashCommand, MessageTrackerSlashCommand]
-=======
-import { FoodSlashCommand } from './commands/food'
-import { MeetSlashCommand } from './commands/meeting'
-
-// register commands
-const commandList = [EmergencyTagSlashCommand, SetStateSlashCommand, DrawLotsSlashCommand, ButtonSlashCommand,DropDownSlashCommand,FoodSlashCommand,MeetSlashCommand]
->>>>>>> 863883fe78aced1d6e920891b0121ecdcbadfe98
 
 dotenv.config()
 

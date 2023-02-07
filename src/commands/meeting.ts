@@ -82,14 +82,14 @@ export const MeetSlashCommand : SlashCommand = {
     const time = new TextInputBuilder()
 			.setCustomId('time')
 			.setLabel("Time:")
-      .setValue('format:2023-02-07-18:30')
+      .setValue('2023-02-12T18:00:00.000Z')
 			.setStyle(TextInputStyle.Short);
     
-    // const reply = new TextInputBuilder()
-		// 	.setCustomId('reply')
-		// 	.setLabel("This invitation Should be replied in:")
-    //   .setValue(`${level}`)
-		// 	.setStyle(TextInputStyle.Short);
+    const member = new TextInputBuilder()
+			.setCustomId('attend')
+			.setLabel("This invitation Should be replied in:")
+      .setValue(`${users}`)
+			.setStyle(TextInputStyle.Short);
 
     const content = new TextInputBuilder()
 			.setCustomId('content')
@@ -102,9 +102,9 @@ export const MeetSlashCommand : SlashCommand = {
 		  const one = new ActionRowBuilder<any>().addComponents(meet);
 		  const two = new ActionRowBuilder<any>().addComponents(loc);
       const three = new ActionRowBuilder<any>().addComponents(time);
-      //const four = new ActionRowBuilder<any>().addComponents(atendees);
+      const four = new ActionRowBuilder<any>().addComponents(member);
       const five = new ActionRowBuilder<any>().addComponents(content);
-      modal.addComponents(one,two,three,five);
+      modal.addComponents(one,two,three,four,five);
       await interaction.showModal(modal)
       //call api to store the whole meeting info!
       //...

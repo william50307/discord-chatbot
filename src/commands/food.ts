@@ -39,66 +39,24 @@ export const FoodSlashCommand : SlashCommand = {
 			.setLabel("Menu Link:")
 			.setStyle(TextInputStyle.Short);
     
+    const exp = new TextInputBuilder()
+			.setCustomId('time')
+			.setLabel("Order Expired Time(10/30/60min):")
+      .setValue('10')
+			.setStyle(TextInputStyle.Short);
+    
     //build menu for time selections
 
-    const row = new ActionRowBuilder<any>()
-    .addComponents(
-      new StringSelectMenuBuilder()
-        .setCustomId('times')
-        .setPlaceholder('Order Expire Time')
-        .addOptions(
-          {
-            label: '10 mins ⏱',
-            description: '10 mins to close the order!',
-            value: 'first_option',
-          },
-          {
-            label: '30 mins ⏱',
-            description: '30 mins to close the order!',
-            value: 'second_option',
-          },
-          {
-            label: '1 hour ⏱',
-            description: '1 hour to close the order!',
-            value: 'third_option',
-          },
 
-        ),
-
-    )
 
 		// An action row only holds one text input,
 		// so you need one action row per text input.
 		  const firstActionRow = new ActionRowBuilder<any>().addComponents(name);
 		  const secondActionRow = new ActionRowBuilder<any>().addComponents(menu);
-      const thirdActionRow = new ActionRowBuilder<any>().addComponents(row);
+      const thirdActionRow = new ActionRowBuilder<any>().addComponents(exp);
 
-      modal.addComponents(firstActionRow, secondActionRow);
+      modal.addComponents(firstActionRow, secondActionRow,thirdActionRow);
       await interaction.showModal(modal)
       
-
-
-    // -- call api 
-    // const row:ActionRowBuilder = new ActionRowBuilder()
-		// 	.addComponents(
-		// 		new ButtonBuilder()
-		// 			.setCustomId('yes')
-		// 			.setLabel('Yes')
-		// 			.setStyle(ButtonStyle.Success),
-		// 	)
-    //   .addComponents(
-		// 		new ButtonBuilder()
-		// 			.setCustomId('no')
-		// 			.setLabel('No')
-		// 			.setStyle(ButtonStyle.Danger),
-		// 	);
-
-      // // meeting info
-      // const embed:EmbedBuilder = new EmbedBuilder()
-			// .setColor(0x0099FF)
-			// .setTitle('Meeting Ivitation')
-			// .setDescription('write meeting info here');
-
-	//	await interaction.reply({components: [row]});
   }
 }

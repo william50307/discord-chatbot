@@ -14,9 +14,10 @@ import { AppError } from './errors'
 import { AppConfig, readEnvironmentVariable } from './config'
 import { loginBot, setBotListener } from './bot'
 import { FoodSlashCommand } from './commands/food'
+import { MeetSlashCommand } from './commands/meeting'
 
 // register commands
-const commandList = [EmergencyTagSlashCommand, SetStateSlashCommand, DrawLotsSlashCommand, ButtonSlashCommand,DropDownSlashCommand,FoodSlashCommand]
+const commandList = [EmergencyTagSlashCommand, SetStateSlashCommand, DrawLotsSlashCommand, ButtonSlashCommand,DropDownSlashCommand,FoodSlashCommand,MeetSlashCommand]
 
 dotenv.config()
 

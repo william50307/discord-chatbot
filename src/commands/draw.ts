@@ -19,7 +19,8 @@ export const DrawLotsSlashCommand : SlashCommand = {
     // user id format is : <@...>
     // regular expression?
 
-    if (!interaction.isChatInputCommand()) return
+
+    if (!interaction.isChatInputCommand()) return;
     const input_users = interaction?.options.getString('users');
     const users = input_users?.split(' ')
     if (typeof users === 'undefined'){

@@ -28,7 +28,7 @@ export const FoodSlashCommand : SlashCommand = {
       console.log(data)
       const [status, res] = await api_post('form', data);
       const idd = res['fId']
-      //console.log(idd)
+      console.log(idd)
     
     //order sheets
     const modal = new ModalBuilder()
@@ -52,11 +52,11 @@ export const FoodSlashCommand : SlashCommand = {
 			.setLabel("Order Expired Time(10/30/60min):")
       .setValue('10')
 			.setStyle(TextInputStyle.Short);
-    const id = new TextInputBuilder()
-    .setCustomId('id')
-    .setLabel("SHEET ID (DO NOT MODIFY)")
-    .setValue(`${idd}`)
-    .setStyle(TextInputStyle.Short);
+    // const id = new TextInputBuilder()
+    // .setCustomId('id')
+    // .setLabel("SHEET ID (DO NOT MODIFY)")
+    // .setValue(`${idd}`)
+    // .setStyle(TextInputStyle.Short);
     
     //build menu for time selections
 
@@ -67,10 +67,10 @@ export const FoodSlashCommand : SlashCommand = {
 		  const firstActionRow = new ActionRowBuilder<any>().addComponents(name);
 		  const secondActionRow = new ActionRowBuilder<any>().addComponents(menu);
       const thirdActionRow = new ActionRowBuilder<any>().addComponents(exp);
-      const forthActionRow = new ActionRowBuilder<any>().addComponents(id);
+      //const forthActionRow = new ActionRowBuilder<any>().addComponents(id);
 
 
-      modal.addComponents(firstActionRow, secondActionRow,thirdActionRow,forthActionRow);
+      modal.addComponents(firstActionRow, secondActionRow,thirdActionRow);
       await interaction.showModal(modal)
       
   }

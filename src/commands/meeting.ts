@@ -49,15 +49,13 @@ export const MeetSlashCommand : SlashCommand = {
       }
       //let msg:string = 'The Attendees😀:  ';
 
-      let msg:string = '‼️ Meeting Invitation from user ‼️ : \n\n' + interaction.user.username
+      let msg:string = '‼️ Meeting Invitation from user ‼️ : \n' + interaction.user.username
       msg = msg + `\n ⚠️ Please confirm in ${level} at ${cha} `
       
 
       for (const sel of users){
         interaction.client.users.send(sel.slice(2,-1), msg);
       } 
-
-
 
 
     
@@ -82,7 +80,7 @@ export const MeetSlashCommand : SlashCommand = {
     const time = new TextInputBuilder()
 			.setCustomId('time')
 			.setLabel("Time:")
-      .setValue('2023-02-12T18:00:00.000Z')
+      .setValue('2023-02-08 18:00:00')
 			.setStyle(TextInputStyle.Short);
     
     const member = new TextInputBuilder()

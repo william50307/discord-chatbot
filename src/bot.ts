@@ -125,11 +125,12 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
       }
       else if(interaction.customId == 'attend'){
         const ppl = interaction.client.user
-        const joint = interaction.client.user.username
-
+        const joint = interaction.client.user.username //this is chatbot
+        console.log('user who clicked')
+        console.log(ppl)
 
         const embed3 = new EmbedBuilder()
-        .setTitle(`Great! You will join this meeting`)
+        .setTitle(`Great! ${interaction.user.username} will join this meeting`)
         .setColor(0xFFD733)
         .setDescription(`The bot will remind you 10 mins before the meeting starts!🥳`)
         .setTimestamp()
@@ -343,7 +344,7 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
           //time's up! call API! -> show the entire order sheet to the people who triggered
           //...
           //*** UIUX!!!!
-          const [status, data] = await api_get('form/1');
+          const [status, data] = await api_get('form');
           let msg = '';
           //console.log(data)
           data['data'].map( (d:any) => {
@@ -488,9 +489,9 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
           await wait(1000*60*60)
           await interaction.editReply({embeds:[embed2],components:[]});
         }
-        else{
+        else{ //5min emergency meet!
 
-          let min = 10
+          let min = 20
         
           
           var t =setInterval(() => {
@@ -503,22 +504,68 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
               }
               
           }, 1000)
+          const today = new Date();
+          await wait(1000*20) //for demo, from 5mins to 10 secs
+         
 
-          await wait(1000*10) //for demo, from 5mins to 10 secs
           
-          //const [status, win] = await api_get('choose');
-          //let msg = '';
-          //console.log(interaction.user.id)
-          //console.log(status['data'])
-          // console.log(status['data'][0]["uId"])
-          // // status['data'].map( (d:any) => {
-          // //   //const user = interaction.client.users.cache.get(d.uId);
-          // //   console.log(d.uId);
-          // //  //msg += `🔅 Name : ${user?.username}`
-          // //  // msg += `🔅 Name : ${user?.username}\n 🔅 Food: ${d.}\n  🔅 Number: ${d.num}\n 🔅 Total: ${d.amount}\n 🔅 Remark : ${d.remark} \n\n`
-          // // })
+          const [status, win] = await api_get(`choose/${interaction.user.id}`);
+          let msg = '';
+          //console.log(status)
+          //console.log(win)
+          let tt = '';
+          win['data'].map( (d:any) => {
+           
+            const user = interaction.client.users.cache.get(d.uId);
+           msg += `🔅 Name : ${user?.username}\n🔅 Status: ${d.choose}\n\n`
+           //console.log('here!!!')
+           tt = `${d.s_time}`
+          })
 
-          await interaction.editReply({embeds:[embed2],components:[]});
+
+          //notify the attendees 10 mins before  the meeting
+          
+          const dl = new Date(tt)
+          
+          const cron = require('cron')
+
+          let msg2:string = ' '
+          let meetName:string = ' '
+
+          const notify = async function(){
+
+            win['data'].map( (d:any) => {
+            const user = interaction.client.users.cache.get(d.uId);
+             msg2 = `\n\n🔉 Notification :  Meeting for " ${d.content} at ${d.location} "  will start in 10 mins🔉\n Please be on time, tks!😁`
+             meetName = d.content
+            interaction.client.users.send(d.uId, msg2);
+            return;
+            })
+
+          }
+          const DL:Date = new Date(tt)
+          let notify_meet = new cron.CronJob('*/60 * * * * *',notify)
+          let time = (DL.getTime())-(Date.now()-1000*60*10)
+          // console.log('the deadline time')
+          // console.log(tt)
+          // console.log(DL.getTime())
+          // console.log('cur time -10 min')
+          // console.log(Date.now()-1000*60*10)
+          // console.log('the time')
+          // console.log(time)
+          
+        
+         // setTimeout(()=>notify_meet.start(),DL.getTime()-(Date.now()-1000*60*10))
+         //目前寫死兩分鐘...
+          setTimeout(()=>notify_meet.start(),1000*60*2)
+
+        
+         await interaction.editReply({content:msg,embeds:[embed2],components:[]});
+
+          
+          //await wait(1000*20)
+          //await interaction.editReply({content:`The notification message for meet is sent to each attendee!😇`})
+          //console.log('the meet msg is sent')
           
         }
 

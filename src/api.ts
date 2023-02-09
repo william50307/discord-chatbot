@@ -7,7 +7,7 @@ type Option = {
     'body' ?: string,
 }
 
-const API_URL = 'https://7a70-140-113-136-219.ngrok.io/';
+const API_URL = 'https://18b1-140-113-73-94.ngrok.io/';
 
 export const apiFetch = async (url : string, method :string = 'GET', data = null) => {
     let options : Option = {

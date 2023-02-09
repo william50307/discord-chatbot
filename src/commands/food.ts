@@ -26,7 +26,7 @@ export const FoodSlashCommand : SlashCommand = {
           //call api
       const data = {'hostId' : interaction.user.id}
       console.log(data)
-      const [status, res] = await api_post('form', data);
+      const [status, res] = await api_post('/form', data);
       const idd = res['fId']
       console.log(idd)
     

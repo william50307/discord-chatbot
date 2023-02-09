@@ -1,5 +1,4 @@
 import { SlashCommandBuilder, CommandInteraction, Collection, Message, InteractionType } from 'discord.js'
-import { date } from 'io-ts-types';
 import { SlashCommand } from '../types/command'
 import { api_get, api_put } from '../api';
 
@@ -7,18 +6,18 @@ const wait = require('node:timers/promises').setTimeout;
 
 export const AllUserStateSlashCommand : SlashCommand = {
   data: new SlashCommandBuilder()
-    .setName('alluser_state')
+    .setName('all_user_state')
     .setDescription('get all user state'),
 
   async execute(interaction: CommandInteraction) {
     // get user input
-    const [status, data] = await api_get('user_list');
+    const [status, res] = await api_get('/user_list');
     let msg = '';
-    data['data'].map( (d:any) => {
-      const user = interaction.client.users.cache.get(d.uId);
-      console.log(user);
-      
-      msg += `user : ${user?.username} status : ${d.status} \n`
+    res['data'].map( (d:any) => {
+      const user = interaction.client.users.cache.get(d.uId);      
+      if (user !== undefined){
+        msg += `user : ${user?.username} status : ${d.status} \n`
+      }
     })
 
     // --- call api to store in database ---
@@ -48,11 +47,10 @@ export const SetStateSlashCommand : SlashCommand = {
     if (!interaction.isChatInputCommand()) return
     const state = interaction.options.getString('state');
     const data = {'uId' : interaction.user.id, 'status' : state}
-    
-    
-    // --- call api to store in database ---
-    const [status, res] = await api_put('user', data);
 
+    // --- call api to store in database ---
+    const [status, res] = await api_put('/user', data);
+    
     await interaction.reply({content : `change your state to ${state}`, ephemeral: true} )
   }
 }

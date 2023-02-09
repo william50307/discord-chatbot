@@ -14,16 +14,10 @@ export const AllUserIdSlashCommand : SlashCommand = {
 
     const guild = interaction.client.guilds.cache.get('1071008703815356416');
     
-
-    
     //channel.members
-    let msg = 'testing';
-    //console.log(channel.members[0]);
-    guild?.members.cache.map(m => console.log(m.user.username))
+    let msg = '';
+    guild?.members.cache.map(m => msg += `useranme : ${m.user.username} userid : ${m.user.id} \n`)
     
-    //guild.members.fetch().map(d => console.log(d))
-    //guild.members.fetch().map( d => msg += `user : ${d.user.username}, user:id ${d.user.id} \n`)
-
     // --- call api to store in database ---
 
     await interaction.reply({content : msg, ephemeral: true} )

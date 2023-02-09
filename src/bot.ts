@@ -5,6 +5,9 @@ import { SlashCommand } from './types/command'
 import { DiscordjsClientLoginError } from './types/response'
 import * as TE from 'fp-ts/TaskEither'
 import {ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder,ModalBuilder,TextInputBuilder, TextInputStyle,StringSelectMenuBuilder } from 'discord.js'
+import { api_put, api_post, api_get } from './api';
+import { cons } from 'fp-ts/lib/ReadonlyNonEmptyArray'
+
 export const loginBot: (appConfig: AppConfig) => (client: Client) => TE.TaskEither<AppError, string> =
   (appConfig) => (client) =>
     TE.tryCatch(
@@ -17,7 +20,20 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
     const commands = new Collection<string, SlashCommand>(commandList.map((c) => [c.data.name, c]))
 
     client.once(Events.ClientReady, () => {
-      console.log('Bot Ready!')
+      console.log('Bot Ready!');
+      // message tracker
+      const cron = require("cron");
+      const notify = async function(){
+        const [status, res] = await api_get(`/tag`); 
+        for(const d of res.data){    
+            const host = client.users.cache.get(d.hostId);
+            client.users.send(d.clientId, `your emergency message hasn't been replyed! \n host : ${host?.username} \n content : ${d.content} `)
+        }
+        return;
+      }
+      //execute the job every 10 seconds
+      let notification_job = new cron.CronJob('*/10 * * * * *', notify); 
+      notification_job.start()
     })
 
     client.on(Events.InteractionCreate, async (interaction) => {
@@ -41,7 +57,7 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
     client.on(Events.InteractionCreate, async interaction => {
       if (!interaction.isButton()) return;
       console.log(interaction);
-      
+      if(!interaction.channel) return;
      const collector = interaction.channel.createMessageComponentCollector({time: 15000 });
 
       collector.on('collect', async buttonInteraction => {
@@ -191,10 +207,75 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
 
     client.on(Events.InteractionCreate, async interaction => {
       if (!interaction.isStringSelectMenu()) return;
-
       
+      if (interaction.customId === 'emergency_message_reply'){
+   
+        const msg_id = interaction.values[0];     
+        const modal = new ModalBuilder()
+          .setCustomId('emergency_message_modal')
+          .setTitle('reply emergency message');
 
-      if (interaction.customId === 'select') {
+        const favoriteColorInput = new TextInputBuilder()
+          .setCustomId('emergency_reply')
+          .setLabel("reply message")
+          .setStyle(TextInputStyle.Short);
+
+        const hobbiesInput = new TextInputBuilder()
+          .setCustomId('emergency_message_key')
+          .setLabel("don't change")
+          .setValue(msg_id)
+          .setStyle(TextInputStyle.Short);
+
+        const firstActionRow = new ActionRowBuilder<any>().addComponents(favoriteColorInput);
+        const secondActionRow = new ActionRowBuilder<any>().addComponents(hobbiesInput);
+
+        modal.addComponents(firstActionRow, secondActionRow);
+        await interaction.showModal(modal);
+      } 
+
+      else if (interaction.customId === 'change_job_state'){
+        const [job_id, state] = interaction.values[0].split(' ');
+        // signal 
+        const [status, res] = await api_put('/job', {'jId' : job_id, 'status' : state})
+        
+        if (status === 200){      
+          const host = interaction.client.users.cache.get(res.hostId);
+          const client = interaction.client.users.cache.get(res.clientId);
+          if (host === undefined) return;
+          // notify host 
+          interaction.client.users.send(host?.id, `user : ${client?.username} changed the status to ${state} \n job content: ${res.content}`);
+          await interaction.reply({content : `your job status has been changed to '${state}'`, ephemeral: true} );
+        }
+        else{
+          await interaction.reply({content : 'something wrong when calling the api', ephemeral: true} )
+        }
+        //
+      }
+
+      else if (interaction.customId === 'job_reply'){
+        const job_id = interaction.values[0];
+
+        const row = new ActionRowBuilder<any>()
+        .addComponents(
+          new StringSelectMenuBuilder()
+            .setCustomId('change_job_state')
+            .setPlaceholder('change your job state here')
+            .addOptions({
+							label: 'Processing',
+							description: 'change job state to Processing',
+							value: `${job_id} processing`,
+						},
+						{
+							label: 'Done',
+							description: 'change job state to Done',
+							value: `${job_id} Done`,
+						}),
+        );
+        
+        await interaction.reply({ content: 'please change your job state!', components: [row] });        
+      }
+
+      else if (interaction.customId === 'select') {
         //await interaction.deferUpdate();
         //await wait(3000);
         const selected = interaction.values[0];
@@ -261,9 +342,23 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
     })
     client.on(Events.InteractionCreate, async interaction => {
       if (!interaction.isModalSubmit()) return ;
+
+      if (interaction.customId === 'emergency_message_modal'){
+        const reply = interaction.fields.getTextInputValue('emergency_reply')
+        const key = interaction.fields.getTextInputValue('emergency_message_key')
+        console.log(reply , key)
+
+        const [status, res] = await api_put('/tag', {'msgId' : key})
+
+        const user = interaction.client.user;
+        const host = interaction.client.users.cache.get(res.data[0].hostId)
+        //if (typeof host === 'undefined') await interaction.reply({content:'can not get the host id'});
+        interaction.client.users.send(res.data[0].hostId, `user : ${host?.username} has been reply the message : ${res.data[0].content} \n reply content:\n ${reply}`)
+        await interaction.reply({content:'success'})
+      }
       
       //modal for food
-      if (interaction.customId === 'foodies') {
+      else if (interaction.customId === 'foodies') {
         //get link and name given by the people who triggered
         const name = interaction.fields.getTextInputValue('restname')
         const link = interaction.fields.getTextInputValue('link')

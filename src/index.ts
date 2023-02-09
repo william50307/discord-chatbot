@@ -1,5 +1,5 @@
 import { Client, GatewayIntentBits } from 'discord.js'
-import { AssignJobSlashCommand } from './commands/assignjob'
+import { AllJobCommand, SetJobStateCommand, AssignJobSlashCommand } from './commands/assignjob'
 import { AllUserStateSlashCommand, SetStateSlashCommand, LastMessageCommand} from './commands/state'
 import { DrawLotsSlashCommand } from './commands/draw'
 import { ButtonSlashCommand } from './commands/buttons'
@@ -13,11 +13,13 @@ import { sequenceS } from 'fp-ts/Apply'
 import { AppError } from './errors'
 import { AppConfig, readEnvironmentVariable } from './config'
 import { loginBot, setBotListener } from './bot'
-import { MessageTrackerSlashCommand } from './commands/messagetraker'
+import { MessageTrackerSlashCommand, MessageTrackerReplySlashCommand, AllEmergencyMessageCommand } from './commands/messagetraker'
 import { AllUserIdSlashCommand } from './commands/utils'
 
 // register commands
-const commandList = [AllUserIdSlashCommand, AllUserStateSlashCommand, AssignJobSlashCommand, LastMessageCommand, SetStateSlashCommand, DrawLotsSlashCommand, ButtonSlashCommand,DropDownSlashCommand, MessageTrackerSlashCommand]
+const commandList = [AllEmergencyMessageCommand, MessageTrackerReplySlashCommand, SetJobStateCommand, 
+  AllJobCommand, AllUserIdSlashCommand, AllUserStateSlashCommand, AssignJobSlashCommand, LastMessageCommand, 
+  SetStateSlashCommand, DrawLotsSlashCommand, ButtonSlashCommand,DropDownSlashCommand, MessageTrackerSlashCommand]
 
 dotenv.config()
 

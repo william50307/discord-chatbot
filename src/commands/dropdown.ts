@@ -28,6 +28,6 @@ export const DropDownSlashCommand : SlashCommand = {
 					),
 			);
 
-		await interaction.reply({ content: 'Testing!', components: [row] });
+		await interaction.reply({ content: 'Testing!' });
   }
 }

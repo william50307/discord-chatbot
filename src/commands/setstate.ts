@@ -20,6 +20,7 @@ export const SetStateSlashCommand : SlashCommand = {
 
   async execute(interaction: CommandInteraction) {
     // get user input
+    if (!interaction.isChatInputCommand()) return
     const state = interaction.options.getString('state');
 
     // --- call api to store in database ---

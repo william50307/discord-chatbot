@@ -6,7 +6,6 @@ import { DiscordjsClientLoginError } from './types/response'
 import * as TE from 'fp-ts/TaskEither'
 import {ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder,ModalBuilder,TextInputBuilder, TextInputStyle,StringSelectMenuBuilder } from 'discord.js'
 import { api_put, api_post, api_get } from './api';
-import { cons } from 'fp-ts/lib/ReadonlyNonEmptyArray'
 
 export const loginBot: (appConfig: AppConfig) => (client: Client) => TE.TaskEither<AppError, string> =
   (appConfig) => (client) =>
@@ -61,7 +60,6 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
      const collector = interaction.channel.createMessageComponentCollector({time: 15000 });
 
       collector.on('collect', async buttonInteraction => {
-        console.log('hihgi')
         if (buttonInteraction.customId === 'yes'){
           await buttonInteraction.update({ content: 'Yes button was clicked!', components: [] });
           // send DM to who react
@@ -107,6 +105,12 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
       .setLabel("Others")
       .setStyle(TextInputStyle.Paragraph);
 
+      // const id = new TextInputBuilder()
+      // .setCustomId('id')
+      // .setLabel("Defult ID")
+      // .setValue('1')
+      // .setStyle(TextInputStyle.Paragraph);
+
       const one= new ActionRowBuilder<any>().addComponents(food);
       const two = new ActionRowBuilder<any>().addComponents(num);
       const three = new ActionRowBuilder<any>().addComponents(price);
@@ -143,6 +147,9 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
         .setTimestamp()
         //call api to store the user who confirmed to attend the meeting
         //...
+        const data = {'uId' : interaction.user.id,'choose':"accept",'reason':' '}
+        const [status, res] = await api_put('choose',data);
+
         await interaction.reply({embeds:[embed3],ephemeral:true});
   
     
@@ -346,7 +353,7 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
       if (interaction.customId === 'emergency_message_modal'){
         const reply = interaction.fields.getTextInputValue('emergency_reply')
         const key = interaction.fields.getTextInputValue('emergency_message_key')
-        console.log(reply , key)
+
 
         const [status, res] = await api_put('/tag', {'msgId' : key})
 
@@ -426,6 +433,18 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
          
           //time's up! call API! -> show the entire order sheet to the people who triggered
           //...
+          //*** UIUX!!!!
+          const [status, data] = await api_get('form/1');
+          let msg = '';
+          //console.log(data)
+          data['data'].map( (d:any) => {
+            const user = interaction.client.users.cache.get(d.clientId);
+            console.log(user);
+            msg += `🔅 Name : ${user?.username}\n 🔅 Food: ${d.food}\n  🔅 Number: ${d.num}\n 🔅 Total: ${d.amount}\n 🔅 Remark : ${d.remark} \n\n`
+          })
+
+          await interaction.editReply({content:msg,embeds:[embed2],components:[]}); //resend a message after specific seconds, the previous message will be deleted!
+
         }
         else if(time == '30'){
 
@@ -466,6 +485,17 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
       
       }
       else if(interaction.customId == 'orders'){
+        //const user = interaction.client.user.id
+        //call api!!!!
+        const food = interaction.fields.getTextInputValue('userfood')
+        const num = interaction.fields.getTextInputValue('ordernum')
+        const price = interaction.fields.getTextInputValue('price')
+        const other = interaction.fields.getTextInputValue('other')
+        //const id = interaction.fields.getTextInputValue('id')
+
+        const data = {'clientId' : interaction.user.id,'food':food,'num':num,'amount':price,'remark':other}
+
+        const [status, res] = await api_post('user_form', data);
 
         const embed3 = new EmbedBuilder()
         .setTitle(`Thanks!`)
@@ -479,10 +509,17 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
       else if(interaction.customId == '1day'||interaction.customId == '1hr'||interaction.customId == '5mins'){
         //one day meeting sheet
         const type = interaction.customId
+        const attend = interaction.fields.getTextInputValue('attend')
         const name = interaction.fields.getTextInputValue('meetname')
         const loc = interaction.fields.getTextInputValue('loc')
         const time = interaction.fields.getTextInputValue('time')
         const cxt = interaction.fields.getTextInputValue('content')
+        
+        //call api!
+        const data = {'hostId' : interaction.user.id,'s_time':time,'location':loc,'content':cxt,'attendee':attend}
+
+        const [status, res] = await api_post('meeting', data);
+
 
         const info = new EmbedBuilder()
         .setTitle(`${type} meeting info`)
@@ -544,7 +581,7 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
         }
         else{
 
-          let min = 30
+          let min = 10
         
           
           var t =setInterval(() => {
@@ -558,7 +595,20 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
               
           }, 1000)
 
-          await wait(1000*30) //for demo, from 5mins to 30 secs
+          await wait(1000*10) //for demo, from 5mins to 10 secs
+          
+          //const [status, win] = await api_get('choose');
+          //let msg = '';
+          //console.log(interaction.user.id)
+          //console.log(status['data'])
+          // console.log(status['data'][0]["uId"])
+          // // status['data'].map( (d:any) => {
+          // //   //const user = interaction.client.users.cache.get(d.uId);
+          // //   console.log(d.uId);
+          // //  //msg += `🔅 Name : ${user?.username}`
+          // //  // msg += `🔅 Name : ${user?.username}\n 🔅 Food: ${d.}\n  🔅 Number: ${d.num}\n 🔅 Total: ${d.amount}\n 🔅 Remark : ${d.remark} \n\n`
+          // // })
+
           await interaction.editReply({embeds:[embed2],components:[]});
           
         }
@@ -566,7 +616,7 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
         
 
         }
-        else if(interaction.customId == 'reasons'){
+        else if(interaction.customId === 'reasons'){
 
           const embed2 = new EmbedBuilder()
           .setTitle(`Sent Successfully!🥳`)

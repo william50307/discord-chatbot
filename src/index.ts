@@ -15,11 +15,14 @@ import { AppConfig, readEnvironmentVariable } from './config'
 import { loginBot, setBotListener } from './bot'
 import { MessageTrackerSlashCommand, MessageTrackerReplySlashCommand, AllEmergencyMessageCommand } from './commands/messagetraker'
 import { AllUserIdSlashCommand } from './commands/utils'
+import { FoodSlashCommand } from './commands/food'
+import { MeetSlashCommand } from './commands/meeting'
 
 // register commands
 const commandList = [AllEmergencyMessageCommand, MessageTrackerReplySlashCommand, SetJobStateCommand, 
   AllJobCommand, AllUserIdSlashCommand, AllUserStateSlashCommand, AssignJobSlashCommand, LastMessageCommand, 
-  SetStateSlashCommand, DrawLotsSlashCommand, ButtonSlashCommand,DropDownSlashCommand, MessageTrackerSlashCommand]
+  SetStateSlashCommand, DrawLotsSlashCommand, ButtonSlashCommand,DropDownSlashCommand, MessageTrackerSlashCommand,
+  FoodSlashCommand,MeetSlashCommand]
 
 dotenv.config()
 

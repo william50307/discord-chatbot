@@ -542,7 +542,7 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
         if(time === '10'){
 
           //demo countdown for 10 secs
-          let timeleft = 10
+          let timeleft = 40
           var t = setInterval(() => {
             timeleft --;
             if(timeleft>=0){
@@ -554,7 +554,7 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
         }, 1000)
         
           
-          await wait(1000*10) //for demo, 30secs
+          await wait(1000*40) //for demo, 30secs
           await interaction.editReply({embeds:[embed2],components:[]}); //resend a message after specific seconds, the previous message will be deleted!
          
           //time's up! call API! -> show the entire order sheet to the people who triggered
@@ -562,13 +562,17 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
           //*** UIUX!!!!
           const [status, data] = await api_get('/form');
           let msg = '';
+          let all_amount = '';
           //console.log(data)
           data['data'].map( (d:any) => {
             const user = interaction.client.users.cache.get(d.clientId);
             console.log(user);
-            msg += `🔅 Name : ${user?.username}\n 🔅 Food: ${d.food}\n  🔅 Number: ${d.num}\n 🔅 Total: ${d.amount}\n 🔅 Remark : ${d.remark} \n\n`
+            msg += `🔅 Name : ${user?.username}\n 🔅 Food: ${d.food}\n 🔅 Number: ${d.num}\n 🔅 Total: ${d.amount}\n 🔅 Remark : ${d.remark} \n\n`
+            all_amount = `${d.total_price}`
           })
-
+          //add key value
+          //msg+=all_amount
+          console.log(all_amount)
           await interaction.editReply({content:msg,embeds:[embed2],components:[]}); //resend a message after specific seconds, the previous message will be deleted!
 
         }

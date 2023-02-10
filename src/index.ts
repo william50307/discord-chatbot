@@ -3,7 +3,8 @@ import { AllJobCommand, SetJobStateCommand, AssignJobSlashCommand } from './comm
 import { AllUserStateSlashCommand, SetStateSlashCommand, LastMessageCommand} from './commands/state'
 import { DrawLotsSlashCommand } from './commands/draw'
 import { ButtonSlashCommand } from './commands/buttons'
-import {DropDownSlashCommand} from './commands/dropdown'
+//import {DropDownSlashCommand} from './commands/dropdown'
+import {questionSlashCommand} from './commands/questions'
 import { deploySlashCommands } from './deploy'
 import { pipe } from 'fp-ts/lib/function'
 import dotenv from 'dotenv'
@@ -17,13 +18,15 @@ import { MessageTrackerSlashCommand, MessageTrackerReplySlashCommand, AllEmergen
 import { AllUserIdSlashCommand } from './commands/utils'
 import { FoodSlashCommand } from './commands/food'
 import { MeetSlashCommand } from './commands/meeting'
+import {EmergencyTagSlashCommand} from './commands/emergencytag'
+import { MemeSlashCommand } from './commands/meme'
 
 // register commands
-const commandList = [AllEmergencyMessageCommand, MessageTrackerReplySlashCommand, SetJobStateCommand, 
-  AllJobCommand, AllUserIdSlashCommand, AllUserStateSlashCommand, AssignJobSlashCommand, LastMessageCommand, 
-  SetStateSlashCommand, DrawLotsSlashCommand, ButtonSlashCommand,DropDownSlashCommand, MessageTrackerSlashCommand,
-  FoodSlashCommand,MeetSlashCommand]
 
+const commandList = [AllEmergencyMessageCommand, MessageTrackerReplySlashCommand, SetJobStateCommand,
+  AllJobCommand, AllUserIdSlashCommand, AllUserStateSlashCommand, AssignJobSlashCommand, LastMessageCommand,
+  SetStateSlashCommand, DrawLotsSlashCommand, ButtonSlashCommand, MessageTrackerSlashCommand,
+  FoodSlashCommand,MeetSlashCommand,EmergencyTagSlashCommand,questionSlashCommand,MemeSlashCommand]
 dotenv.config()
 
 // read config

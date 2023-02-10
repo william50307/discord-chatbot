@@ -7,7 +7,6 @@ type Option = {
     'body' ?: string,
 }
 
-
 const API_URL = 'https://0601-220-138-230-78.ngrok.io';
 
 export const apiFetch = async (url : string, method :string = 'GET', data = null) => {
@@ -22,7 +21,7 @@ export const apiFetch = async (url : string, method :string = 'GET', data = null
     }
 
     const response = await fetch(url, options);
-    const status = await response.status;    
+    const status = await response.status;
     const json_data = await response.json();
     return [status, json_data];
   };

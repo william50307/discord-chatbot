@@ -1,10 +1,10 @@
-import { Client, Collection, Events } from 'discord.js'
+import { Client, Collection, Events,ActionRowBuilder} from 'discord.js'
 import { AppConfig } from './config'
 import { AppError, botLoginErrorOf } from './errors'
 import { SlashCommand } from './types/command'
 import { DiscordjsClientLoginError } from './types/response'
 import * as TE from 'fp-ts/TaskEither'
-import {ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder,ModalBuilder,TextInputBuilder, TextInputStyle,StringSelectMenuBuilder } from 'discord.js'
+import { ButtonBuilder, ButtonStyle, EmbedBuilder,ModalBuilder,TextInputBuilder, TextInputStyle,StringSelectMenuBuilder } from 'discord.js'
 import { api_put, api_post, api_get } from './api';
 
 export const loginBot: (appConfig: AppConfig) => (client: Client) => TE.TaskEither<AppError, string> =
@@ -24,7 +24,7 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
       const cron = require("cron");
       const notify = async function(){
         const [status, res] = await api_get(`/tag`); 
-        for(const d of res.data){    
+        for(const d of res.data){
             const host = client.users.cache.get(d.hostId);
             client.users.send(d.clientId, `your emergency message hasn't been replyed! \n host : ${host?.username} \n content : ${d.content} `)
         }
@@ -52,6 +52,7 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
         })
       }
     })
+
 
     client.on(Events.InteractionCreate, async interaction => {
       if (!interaction.isButton()) return;
@@ -198,6 +199,8 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
 
               ),
           )
+
+          
   
           await interaction.reply({embeds:[embed3],ephemeral:true});
           const wait = require('node:timers/promises').setTimeout
@@ -209,12 +212,127 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
       
           }
 
+          if (interaction.customId === 'onoffboard'){
+            const row = new ActionRowBuilder<any>()
+            .addComponents(
+              new StringSelectMenuBuilder()
+                .setCustomId('select_onoffboard')
+                .setPlaceholder('Choose one question of On/off boarding')
+                .addOptions(
+                  {
+                    label: 'Create_account 🏦',
+                    //description: '',
+                    value: 'first_option',
+                  },
+                  {
+                    label: 'All website and their usage 🗂',
+                    //description: '',
+                    value: 'second_option',
+                  },
+                  {
+                    label: 'Common problem ⁇',
+                    //description: '',
+                    value: 'third_option',
+                  },
+    
+                ),
+            )
+    
+            await interaction.reply({ content: 'Testing!', components: [row]  })
+          }
+          else if(interaction.customId === 'administrative'){
+            const row = new ActionRowBuilder<any>()
+            .addComponents(
+              new StringSelectMenuBuilder()
+                .setCustomId('select_adm')
+                .setPlaceholder('Choose one question')
+                .addOptions(
+                  {
+                    label: 'Overtime hours 🕖',
+                    value: 'first_option',
+                  },
+                  {
+                    label: 'Application for reimbursement 😆',
+                    value: 'second_option',
+                  },{
+                    label: 'Download Documents 📃',
+                    value: 'third_option',
+                  },
+                ),
+            )
+    
+            await interaction.reply({ content: 'Testing!', components: [row]  })
+    //        await interaction.update({ content: 'Yes button was clicked!', components: [] });
+          }else if(interaction.customId === 'staff'){
+            const row = new ActionRowBuilder<any>()
+            .addComponents(
+              new StringSelectMenuBuilder()
+                .setCustomId('select_staff')
+                .setPlaceholder('Choose one question')
+                .addOptions(
+                  {
+                    label: 'Gym 🏃🏻‍♂️',
+                    //description: 'Gym',
+                    value: 'first_option',
+                  },
+                  {
+                    label: 'Employee Benefits 🔆',
+                    //description: 'Employee Benefits',
+                    value: 'second_option',
+                  },
+                ),
+            )
+            await interaction.reply({ content: 'Testing!', components: [row] })
+          }else if(interaction.customId === 'recommend'){
+            const row = new ActionRowBuilder<any>()
+            .addComponents(
+              new StringSelectMenuBuilder()
+                .setCustomId('select_rec')
+                .setPlaceholder('Choose one question')
+                .addOptions(
+                  {
+                    label: 'Learning 📒',
+                    value: 'first_option',
+                  },
+                  {
+                    label: 'Languages 🔤',
+                    value: 'second_option',
+                  },
+                ),
+            )
+    
+            await interaction.reply({ content: 'Testing!', components: [row]  })
+          }
+          else if(interaction.customId === 'engineer'){
+            //randomly select a meme to post
+            //const fs = require('fs');
+            const num = (Math.floor(Math.random()* 7)+1).toString();
+            //var files = fs.readdirSync(`./src/memes`).filter(endsWith('.png'))
+            
+            await interaction.reply({ files:[`./src/memes/meme${num}.jpeg`]});
+          }
+          else if(interaction.customId === 'cured'){
+            //randomly select a meme to post
+            //const fs = require('fs');
+            const num = (Math.floor(Math.random()* 5)+1).toString();
+            //var files = fs.readdirSync(`./src/memes`).filter(endsWith('.png'))
+            await interaction.reply({ files:[`./src/meme2/meme${num}.jpeg`]});
+          }
+          else if(interaction.customId === 'lol'){
+            //randomly select a meme to post
+            //const fs = require('fs');
+            const num = (Math.floor(Math.random()* 5)+1).toString();
+            //var files = fs.readdirSync(`./src/memes`).filter(endsWith('.png'))
+            await interaction.reply({ files:[`./src/meme3/meme${num}.jpeg`]});
+          }
+
     });
 
     const wait = require('node:timers/promises').setTimeout;
 
     client.on(Events.InteractionCreate, async interaction => {
       if (!interaction.isStringSelectMenu()) return;
+
       
       if (interaction.customId === 'emergency_message_reply'){
    
@@ -279,15 +397,45 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
 							value: `${job_id} Done`,
 						}),
         );
-        
-        await interaction.reply({ content: 'please change your job state!', components: [row] });        
-      }
 
-      else if (interaction.customId === 'select') {
-        //await interaction.deferUpdate();
-        //await wait(3000);
+        await interaction.reply({ content: 'please change your job state!', components: [row] })
+      }
+      else if (interaction.customId === 'select_onoffboard') {
         const selected = interaction.values[0];
-        await interaction.reply({ content: `${selected} was selected!`});
+        if (selected === 'first_option'){
+          await interaction.reply({ content: 'You should visit this website:....\nIf you have other problems, please contact Mr.Liu.'});
+        }else if(selected === 'second_option'){
+          await interaction.reply({ content: 'There are all websites you may need, and we also tell you when you will need them.'});
+        }else if(selected === 'third_option'){
+          await interaction.reply({ content: '📍 Where is HR\'s office?\n📍 Where can I buy dinner?\n📍 How can I apply for a bonus?'});
+        }
+        else await interaction.reply({ content: `${selected} was selected!`});
+      }else if (interaction.customId === 'select_adm') {
+        const selected = interaction.values[0];
+        if (selected === 'first_option'){
+          await interaction.reply({ content: 'You need to follow these steps:\n First,.....'});
+        }else if(selected === 'second_option'){
+            await interaction.reply({ content: 'You need to follow these steps:\n First,.....'});
+        }else if(selected === 'third_option'){
+          await interaction.reply({ content: '📍 Resignation form\n📍Reimbursement Form\n'});
+      }
+        else await interaction.reply({ content: `${selected} was selected!`});
+      }else if (interaction.customId === 'select_staff') {
+        const selected = interaction.values[0];
+        if (selected === 'first_option'){
+          await interaction.reply({ content: 'Click me to Apply for Gym!'});
+        }else if(selected === 'second_option'){
+            await interaction.reply({ content: '📍 Vacations\n📍Bonus\n'});
+        }
+        else await interaction.reply({ content: `${selected} was selected!`});
+      }else if (interaction.customId === 'select_rec') {
+        const selected = interaction.values[0];
+        if (selected === 'first_option'){
+          await interaction.reply({ content: 'We can recommend you some courses:\n'});
+        }else if(selected === 'second_option'){
+            await interaction.reply({ content: 'We can recommend you some courses:\n'});
+        }
+        else await interaction.reply({ content: `${selected} was selected!`});
       }
       else if(interaction.customId === 'rejects'){
         const reason = interaction.values[0];
@@ -295,7 +443,6 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
         const modal = new ModalBuilder()
               .setCustomId(`reasons`) //id fluctuates with the time!
               .setTitle(`${reason} 📝`);
-                
                 if(reason == 'Time Conflict'){ //time conflict
 
                   const quest = new TextInputBuilder()
@@ -417,7 +564,7 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
         if(time === '10'){
 
           //demo countdown for 10 secs
-          let timeleft = 10
+          let timeleft = 40
           var t = setInterval(() => {
             timeleft --;
             if(timeleft>=0){
@@ -429,7 +576,7 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
         }, 1000)
         
           
-          await wait(1000*10) //for demo, 30secs
+          await wait(1000*40) //for demo, 30secs
           await interaction.editReply({embeds:[embed2],components:[]}); //resend a message after specific seconds, the previous message will be deleted!
          
           //time's up! call API! -> show the entire order sheet to the people who triggered
@@ -437,13 +584,17 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
           //*** UIUX!!!!
           const [status, data] = await api_get('/form');
           let msg = '';
+          let all_amount = '';
           //console.log(data)
           data['data'].map( (d:any) => {
             const user = interaction.client.users.cache.get(d.clientId);
             console.log(user);
-            msg += `🔅 Name : ${user?.username}\n 🔅 Food: ${d.food}\n  🔅 Number: ${d.num}\n 🔅 Total: ${d.amount}\n 🔅 Remark : ${d.remark} \n\n`
+            msg += `🔅 Name : ${user?.username}\n 🔅 Food: ${d.food}\n 🔅 Number: ${d.num}\n 🔅 Total: ${d.amount}\n 🔅 Remark : ${d.remark} \n\n`
+            all_amount = `${d.total_price}`
           })
-
+          //add key value
+          //msg+=all_amount
+          console.log(all_amount)
           await interaction.editReply({content:msg,embeds:[embed2],components:[]}); //resend a message after specific seconds, the previous message will be deleted!
 
         }

@@ -7,7 +7,7 @@ const wait = require('node:timers/promises').setTimeout;
 export const ButtonSlashCommand : SlashCommand = {
   data: new SlashCommandBuilder()
     .setName('button')
-    .setDescription('change current state')
+    .setDescription('Find solutions of you question here!')
     .addStringOption(option =>
       option.setName('state')
         .setDescription('The gif category')
@@ -16,10 +16,12 @@ export const ButtonSlashCommand : SlashCommand = {
           { name: 'idle', value: 'idle' },
           { name: 'meeting', value: 'meeting' },
           { name: 'busy', value: 'busy' },
+          { name: 'vacation', value: 'vacation' },
         )
         .setRequired(true)),
 
   async execute(interaction: CommandInteraction) {
+
     if (!interaction.isChatInputCommand()) return;
     const state = interaction.options.getString('state');
     // -- call api 
@@ -43,6 +45,6 @@ export const ButtonSlashCommand : SlashCommand = {
 			.setTitle('Meeting Ivitation')
 			.setDescription('write meeting info here');
 
-		await interaction.reply({ content: 'Can you join the meeting?', embeds: [embed], components: [row] });
+		await interaction.reply({ content: 'Can you join the meeting?', embeds: [embed], components: [] });
   }
 }

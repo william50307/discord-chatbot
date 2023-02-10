@@ -4,7 +4,7 @@ const wait = require('node:timers/promises').setTimeout;
 
 export const EmergencyTagSlashCommand: SlashCommand = {
   data: new SlashCommandBuilder()
-    .setName('emergency_tag')
+    .setName('emergency_to_do')
     .setDescription('send a notification to personal message')
     .addStringOption(option =>
       option.setName('users')

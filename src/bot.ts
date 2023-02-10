@@ -14,6 +14,8 @@ export const loginBot: (appConfig: AppConfig) => (client: Client) => TE.TaskEith
       (e) => botLoginErrorOf(`Bot Login Fail: ${(e as DiscordjsClientLoginError).code}`)
     )
 
+const  voteMembers = new Set();
+
 export const setBotListener: (client: Client) => (commandList: Array<SlashCommand>) => void =
   (client) => (commandList) => {
     const commands = new Collection<string, SlashCommand>(commandList.map((c) => [c.data.name, c]))
@@ -160,9 +162,6 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
           const ppl = interaction.client.user
           const joint = interaction.client.user.username
 
-
-  
-  
           const embed3 = new EmbedBuilder()
           .setTitle(`Opps! You won't join this meeting 😰`)
           .setColor(0xF31332)
@@ -302,6 +301,46 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
             )
     
             await interaction.reply({ content: 'Testing!', components: [row]  })
+          }else if(interaction.customId === 'first_option'){
+            if (voteMembers.has(`${interaction.user.id} - ${interaction.message.id}`)){
+              await interaction.reply({content: "You've already voted."})
+            }
+            console.log('Yes')
+    
+            voteMembers.add(`${interaction.user.id}`)
+            const pollEmbed = interaction.message.embeds[0];
+            if(!pollEmbed) {
+              await interaction.reply({content: "You've already voted."})
+            }
+            
+    
+            const yesField = pollEmbed.fields[0];
+            //const noField = pollEmbed.fields[1];
+            const VoteCountReply = "Your vote has been counted.";
+            const newNoCount = parseInt(yesField.value) +1
+            yesField.value = ''+newNoCount
+            await interaction.reply({content: VoteCountReply,ephemeral:true})
+            await interaction.message.edit({embeds:[pollEmbed]})
+    
+    
+          }else if(interaction.customId === 'second_option'){
+            if (voteMembers.has(`${interaction.user.id}`)){
+              await interaction.reply({content: "You've already voted."})
+            }
+    
+            voteMembers.add(`${interaction.user.id}`)
+            const pollEmbed = interaction.message.embeds[0];
+            if(!pollEmbed) {
+              await interaction.reply({content: "You've already voted."})
+            }
+    
+            //const yesField = pollEmbed.fields[0];
+            const noField = pollEmbed.fields[1];
+            const VoteCountReply = "Your vote has been counted.";
+            const newNoCount = parseInt(noField.value) +1
+            noField.value = ''+newNoCount
+            await interaction.reply({content: VoteCountReply,ephemeral: true})
+            await interaction.message.edit({embeds:[pollEmbed]})
           }
 
     });

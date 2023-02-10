@@ -50,7 +50,6 @@ export const SetStateSlashCommand : SlashCommand = {
 
     // --- call api to store in database ---
     const [status, res] = await api_put('/user', data);
-    
     await interaction.reply({content : `change your state to ${state}`, ephemeral: true} )
   }
 }

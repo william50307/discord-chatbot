@@ -8,7 +8,7 @@ type Option = {
 }
 
 
-const API_URL = 'https://9015-58-114-73-41.ngrok.io';
+const API_URL = 'https://tsmchack2023-tsid-grp3.de.r.appspot.com';
 
 
 export const apiFetch = async (url : string, method :string = 'GET', data = null) => {

@@ -1,10 +1,10 @@
-import { SlashCommandBuilder, CommandInteraction} from 'discord.js'
+import { SlashCommandBuilder, CommandInteraction,EmbedBuilder} from 'discord.js'
 import internal from 'stream';
 import { SlashCommand } from '../types/command'
 
 export const DrawLotsSlashCommand : SlashCommand = {
   data: new SlashCommandBuilder()
-    .setName('draw_lots')
+    .setName('draw')
     .setDescription('draw lots')
     .addStringOption(option =>
       option.setName('users')
@@ -16,9 +16,6 @@ export const DrawLotsSlashCommand : SlashCommand = {
             .setRequired(true)),
 
   async execute(interaction: CommandInteraction) {
-    // user id format is : <@...>
-    // regular expression?
-
 
     if (!interaction.isChatInputCommand()) return;
     const input_users = interaction?.options.getString('users');
@@ -58,9 +55,11 @@ export const DrawLotsSlashCommand : SlashCommand = {
     const winners:string[] = shuffled.slice(0, winner_num);
 
     // response message
-    let msg:string = '~~~~~The result is~~~~~\n';
+    let msg:string = '';
     var i:number = 0;
     console.log(winner_num)
+    
+     		
     for (const winner of winners){
       msg += works[i].toString()
       msg += ':'.toString()
@@ -70,6 +69,10 @@ export const DrawLotsSlashCommand : SlashCommand = {
       i+=1
       console.log(user?.id)
     }
-    await interaction.reply(msg)
+    const embed:EmbedBuilder = new EmbedBuilder()
+	 		.setColor(0x0099FF)
+	 		.setTitle('~~~~~The result is~~~~~\n')
+      .setDescription(msg);
+    await interaction.reply({embeds: [embed]})
   }
 }

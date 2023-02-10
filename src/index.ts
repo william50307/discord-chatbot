@@ -19,13 +19,14 @@ import { AllUserIdSlashCommand } from './commands/utils'
 import { FoodSlashCommand } from './commands/food'
 import { MeetSlashCommand } from './commands/meeting'
 import {EmergencyTagSlashCommand} from './commands/emergencytag'
+import { MemeSlashCommand } from './commands/meme'
 
 // register commands
 
 const commandList = [AllEmergencyMessageCommand, MessageTrackerReplySlashCommand, SetJobStateCommand,
   AllJobCommand, AllUserIdSlashCommand, AllUserStateSlashCommand, AssignJobSlashCommand, LastMessageCommand,
   SetStateSlashCommand, DrawLotsSlashCommand, ButtonSlashCommand, MessageTrackerSlashCommand,
-  FoodSlashCommand,MeetSlashCommand,EmergencyTagSlashCommand,questionSlashCommand]
+  FoodSlashCommand,MeetSlashCommand,EmergencyTagSlashCommand,questionSlashCommand,MemeSlashCommand]
 dotenv.config()
 
 // read config

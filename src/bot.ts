@@ -303,6 +303,28 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
     
             await interaction.reply({ content: 'Testing!', components: [row]  })
           }
+          else if(interaction.customId === 'engineer'){
+            //randomly select a meme to post
+            //const fs = require('fs');
+            const num = (Math.floor(Math.random()* 7)+1).toString();
+            //var files = fs.readdirSync(`./src/memes`).filter(endsWith('.png'))
+            
+            await interaction.reply({ files:[`./src/memes/meme${num}.jpeg`]});
+          }
+          else if(interaction.customId === 'cured'){
+            //randomly select a meme to post
+            //const fs = require('fs');
+            const num = (Math.floor(Math.random()* 5)+1).toString();
+            //var files = fs.readdirSync(`./src/memes`).filter(endsWith('.png'))
+            await interaction.reply({ files:[`./src/meme2/meme${num}.jpeg`]});
+          }
+          else if(interaction.customId === 'lol'){
+            //randomly select a meme to post
+            //const fs = require('fs');
+            const num = (Math.floor(Math.random()* 5)+1).toString();
+            //var files = fs.readdirSync(`./src/memes`).filter(endsWith('.png'))
+            await interaction.reply({ files:[`./src/meme3/meme${num}.jpeg`]});
+          }
 
     });
 

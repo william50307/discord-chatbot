@@ -1,7 +1,3 @@
-# 請簽到
-## 蔡 
-## 趙
-
 # Discordjs with TypeScript
 
 use [discord.js](https://github.com/discordjs/discord.js) in TypeScript to create discord bot

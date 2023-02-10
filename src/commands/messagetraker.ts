@@ -88,7 +88,6 @@ export const MessageTrackerReplySlashCommand: SlashCommand = {
       'value' : d.msgId.toString(),
       }
     })
-    console.log(menuoption);
     
     // create a drop down list
     const row = new ActionRowBuilder<any>()

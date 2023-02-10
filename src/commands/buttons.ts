@@ -1,12 +1,11 @@
 import { SlashCommandBuilder, CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js'
-import { boolean } from 'io-ts';
 import { SlashCommand } from '../types/command'
 
 const wait = require('node:timers/promises').setTimeout;
 
 export const ButtonSlashCommand : SlashCommand = {
   data: new SlashCommandBuilder()
-    .setName('button')
+    .setName('Ｑ')
     .setDescription('Find solutions of you question here!')
     .addStringOption(option =>
       option.setName('state')

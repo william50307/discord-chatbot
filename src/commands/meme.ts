@@ -39,6 +39,7 @@ export const MemeSlashCommand : SlashCommand = {
 			// .setColor(0x0099FF)
 			// .setTitle('Meeting Ivitation')
 			// .setDescription('write meeting info here');
+    //await interaction.reply({content:'hello'})
 
 		await interaction.reply({ content: 'Feeling tired?? Enjoy MEMEs!!! 🤑\n\n',files:['./src/bro-high-five.mp4'], components: [row] });
   }

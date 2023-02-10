@@ -6,7 +6,6 @@ type Option = {
     'headers' : {'Content-Type': 'application/json'},
     'body' ?: string,
 }
-
 const API_URL = 'https://tsmchack2023-tsid-grp3.de.r.appspot.com';
 
 export const apiFetch = async (url : string, method :string = 'GET', data = null) => {

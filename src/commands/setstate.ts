@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, CommandInteraction } from 'discord.js'
+import { SlashCommandBuilder, CommandInteraction, EmbedBuilder } from 'discord.js'
 import { SlashCommand } from '../types/command'
 
 const wait = require('node:timers/promises').setTimeout;
@@ -22,9 +22,17 @@ export const SetStateSlashCommand : SlashCommand = {
     // get user input
     if (!interaction.isChatInputCommand()) return
     const state = interaction.options.getString('state');
+    
+    const embed = new EmbedBuilder()
+    .setColor(0x0099FF)
+    .setTitle('State Changed!✅')
+    .setDescription(`Dear ${interaction.user.username} 😃, \n\n You've changed your state to ${state}\n`)
+    .setTimestamp()
+    console.log('here???')
+    
 
     // --- call api to store in database ---
 
-    await interaction.reply({content : `change your state to ${state}`, ephemeral: true} )
+    await interaction.reply({embeds:[embed]})
   }
 }

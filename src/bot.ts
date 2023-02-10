@@ -25,7 +25,7 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
       const notify = async function(){
         const [status, res] = await api_get(`/tag`); 
         for(const d of res.data){
-            const host = client.users.cache.get(d.hostId);
+            const host = client.users.cache.get(d.hostId);         
             client.users.send(d.clientId, `your emergency message hasn't been replyed! \n host : ${host?.username} \n content : ${d.content} `)
         }
         return;
@@ -505,10 +505,10 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
 
         const [status, res] = await api_put('/tag', {'msgId' : key})
 
-        const user = interaction.client.user;
-        const host = interaction.client.users.cache.get(res.data[0].hostId)
+        //const user = interaction.client.user;
+        const client = interaction.client.users.cache.get(res.data[0].clientId)
         //if (typeof host === 'undefined') await interaction.reply({content:'can not get the host id'});
-        interaction.client.users.send(res.data[0].hostId, `user : ${host?.username} has been reply the message : ${res.data[0].content} \n reply content:\n ${reply}`)
+        interaction.client.users.send(res.data[0].hostId, `user : ${client?.username} has been reply the message : ${res.data[0].content} \n reply content:\n ${reply}`)
         await interaction.reply({content:'success'})
       }
       

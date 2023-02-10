@@ -28,6 +28,7 @@ export const SetStateSlashCommand : SlashCommand = {
     .setTitle('State Changed!✅')
     .setDescription(`Dear ${interaction.user.username} 😃, \n\n You've changed your state to ${state}\n`)
     .setTimestamp()
+   
     console.log('here???')
     
 

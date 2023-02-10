@@ -25,7 +25,7 @@ export const MessageTrackerSlashCommand: SlashCommand = {
     const input_users = interaction?.options.getString('users');
     const users = input_users?.split(' ').map(u => u.slice(2,-1))
     if (users?.length === 0 || typeof users === 'undefined'){
-      await interaction.reply('there are no user in input string');
+      await interaction.reply({content : 'there are no user in input string', ephemeral: true});
       return;
     }
 
@@ -76,7 +76,7 @@ export const MessageTrackerReplySlashCommand: SlashCommand = {
     const [status, res] = await api_get(`/tag/${user_id}`);
 
     if (res.data.length === 0){
-      await interaction.reply({ content: 'There is no emergency message to reply!'});
+      await interaction.reply({ content: 'There is no emergency message to reply!', ephemeral: true});
       return;
     }
 
@@ -99,7 +99,7 @@ export const MessageTrackerReplySlashCommand: SlashCommand = {
     );
     
     //await interaction.reply({content : msg, ephemeral: true} )
-    await interaction.reply({ content: 'reply the emergency message', components: [row] });
+    await interaction.reply({ content: 'reply the emergency message', components: [row], ephemeral: true });
 
   }
 }
@@ -118,7 +118,7 @@ export const AllEmergencyMessageCommand : SlashCommand = {
     const [status, res] = await api_get(`/tag/${user_id}`);
 
     if (res.data.length === 0){
-      await interaction.reply({ content: 'There is no emergency message to reply!'});
+      await interaction.reply({ content: 'There is no emergency message to reply!', ephemeral: true});
       return;
     }
 

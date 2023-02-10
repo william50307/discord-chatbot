@@ -548,7 +548,7 @@ export const setBotListener: (client: Client) => (commandList: Array<SlashComman
         const client = interaction.client.users.cache.get(res.data[0].clientId)
         //if (typeof host === 'undefined') await interaction.reply({content:'can not get the host id'});
         interaction.client.users.send(res.data[0].hostId, `user : ${client?.username} has been reply the message : ${res.data[0].content} \n reply content:\n ${reply}`)
-        await interaction.reply({content:'success'})
+        await interaction.reply({content:'success!', ephemeral: true})
       }
       
       //modal for food

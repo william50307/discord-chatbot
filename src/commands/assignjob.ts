@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, CommandInteraction, ActionRowBuilder, StringSelectMenuBuilder } from 'discord.js'
+import { SlashCommandBuilder, CommandInteraction, ActionRowBuilder, StringSelectMenuBuilder,EmbedBuilder } from 'discord.js'
 import { SlashCommand } from '../types/command'
 import { api_get, api_post } from '../api';
 
@@ -63,7 +63,7 @@ export const AssignJobSlashCommand: SlashCommand = {
         const [status, res] = await api_get(`/job/${user_id}`);   
         res.data.map( (d:any) => {
           const host = interaction.client.users.cache.get(d.hostId);
-          interaction.client.users.send(d.clientId, `you still have a job to be done! \n content : ${d.content} \n status of this job : ${d.status} \n host : ${host?.username}`)
+          interaction.client.users.send(d.clientId, `⚠️ You still have a job to be done! ⚠️ \n Content : ${d.content} \n Status of this job : ${d.status} \n Host : ${host?.username}`)
           return;
         })
       }
@@ -149,7 +149,7 @@ export const AllJobCommand : SlashCommand = {
     let msg = ''
     res.data.map( (d:any) => {
       const host = interaction.client.users.cache.get(d.hostId);
-      msg += `host : ${host?.username}, job content : ${d.content} \n `
+      msg += `👤 Host : ${host?.username}   📝 Job content : ${d.content} \n `
     })
 
 
@@ -157,6 +157,14 @@ export const AllJobCommand : SlashCommand = {
       await interaction.reply({content : 'There is no job', ephemeral: true} )
       return;
     }
-    await interaction.reply({content :msg, ephemeral: true} )
+
+    const embed = new EmbedBuilder()
+    .setColor(0x0099FF)
+    .setTitle(`${interaction.user.username} \'s Job Processing States ⏭ :`)
+    .setDescription(`${msg}\n`)
+    .setTimestamp()
+
+
+    await interaction.reply({embeds:[embed], ephemeral: true} )
   }
 }

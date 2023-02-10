@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, CommandInteraction, ActionRowBuilder, StringSelectMenuBuilder } from 'discord.js'
+import { SlashCommandBuilder, CommandInteraction, ActionRowBuilder, StringSelectMenuBuilder, EmbedBuilder } from 'discord.js'
 import { SlashCommand } from '../types/command'
 import { api_post, api_get } from '../api'
 
@@ -34,7 +34,7 @@ export const MessageTrackerSlashCommand: SlashCommand = {
 
     // send DM to all tagged users
     for(const user of users){
-      interaction.client.users.send(user, 'you got a new emergency meesage, please reply ASAP');
+      interaction.client.users.send(user, '‼️ You got a new emergency meesage, please reply ASAP ‼️');
     }
     const user_id = interaction.user.id;
     // call api to store a emergency tag
@@ -57,7 +57,7 @@ export const MessageTrackerSlashCommand: SlashCommand = {
     
 
     //--- call api ---
-    await interaction.reply({ content: 'the enmergency message has been created', ephemeral: true })
+    await interaction.reply({ content: 'The emergency message has been created ✅', ephemeral: true })
 
   }
 }
@@ -88,7 +88,6 @@ export const MessageTrackerReplySlashCommand: SlashCommand = {
       'value' : d.msgId.toString(),
       }
     })
-    console.log(menuoption);
     
     // create a drop down list
     const row = new ActionRowBuilder<any>()
@@ -130,14 +129,21 @@ export const AllEmergencyMessageCommand : SlashCommand = {
     let msg = ''
     res.data.map( (d:any) => {
       const host = interaction.client.users.cache.get(d.hostId);
-      msg += `host : ${host?.username}, emergenct message content : ${d.content} \n `
+      msg += `👤 Host : ${host?.username},\n\n ⚠️ Urgent message content : ${d.content} \n `
     })
+
+    const embed = new EmbedBuilder()
+    .setColor(0xF5492E)
+    .setTitle('Unreplied Urgent Messages 💬')
+    .setDescription(`${msg}`)
+    .setTimestamp()
+
 
 
     if(msg === ''){
       await interaction.reply({content : 'There is no emergency message', ephemeral: true} )
       return;
     }
-    await interaction.reply({content :msg, ephemeral: true} )
+    await interaction.reply({embeds:[embed], ephemeral: true} )
   }
 }

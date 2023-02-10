@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, CommandInteraction, Collection, Message, InteractionType } from 'discord.js'
+import { SlashCommandBuilder, CommandInteraction, Collection, Message, InteractionType,EmbedBuilder } from 'discord.js'
 import { SlashCommand } from '../types/command'
 import { api_get, api_put } from '../api';
 
@@ -14,15 +14,21 @@ export const AllUserStateSlashCommand : SlashCommand = {
     const [status, res] = await api_get('/user_list');
     let msg = '';
     res['data'].map( (d:any) => {
-      const user = interaction.client.users.cache.get(d.uId);      
+      const user = interaction.client.users.cache.get(d.uId);
       if (user !== undefined){
-        msg += `user : ${user?.username} status : ${d.status} \n`
+        msg += `👤 User: ${user?.username}  🔘 Status : ${d.status} \n\n`
       }
     })
 
     // --- call api to store in database ---
+    const embed = new EmbedBuilder()
+    .setColor(0xF4E033)
+    .setTitle('All Users\' States:')
+    .setDescription(`${msg}`)
+    .setTimestamp()
 
-    await interaction.reply({content : msg, ephemeral: true} )
+
+    await interaction.reply({embeds:[embed], ephemeral: true} )
   }
 }
 
@@ -50,7 +56,13 @@ export const SetStateSlashCommand : SlashCommand = {
 
     // --- call api to store in database ---
     const [status, res] = await api_put('/user', data);
-    await interaction.reply({content : `change your state to ${state}`, ephemeral: true} )
+    const embed = new EmbedBuilder()
+    .setColor(0x0099FF)
+    .setTitle('State Changed!✅')
+    .setDescription(`Dear ${interaction.user.username} 😃, \n\n You've changed your state to " ${state} "\n`)
+    .setTimestamp()
+
+    await interaction.reply({embeds : [embed] , ephemeral: true} )
   }
 }
 
@@ -72,8 +84,8 @@ export const LastMessageCommand : SlashCommand = {
     for (const channel of interaction.guild.channels.cache.values()){
       if (channel.isTextBased()){
         let messages = await channel.messages.fetch().catch(e => console.log(e));
-        if (!messages) return;     
-        for(const msg of messages){         
+        if (!messages) return;
+        for(const msg of messages){
           if (msg[1].author.id === user?.id && msg[1].createdTimestamp > lastest){
             lastest = msg[1].createdTimestamp
           }
@@ -84,6 +96,12 @@ export const LastMessageCommand : SlashCommand = {
     // latest timestamp
     const dateObj = new Date(lastest)
 
-    await interaction.reply({content : `user : ${user?.username}'s  last messsage was at : ${dateObj.toString()}`, ephemeral: true} )
+    const embed = new EmbedBuilder()
+    .setColor(0x802EF5)
+    .setTitle('Last Message Sent 💬')
+    .setDescription(`${user?.username}\'s last messsage was sent at :\n\n 🕐 ${dateObj.toString()}\n\n`)
+    .setTimestamp()
+
+    await interaction.reply({embeds:[embed], ephemeral: true} )
   }
 }
